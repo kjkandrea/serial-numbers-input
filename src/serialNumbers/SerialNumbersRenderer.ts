@@ -4,9 +4,10 @@ export class SerialNumbersRenderer {
   private readonly inputs: HTMLInputElement[];
   private readonly lengthLimit: number;
 
-  constructor(numbers: Numbers) {
+  constructor(rootEl: HTMLElement, numbers: Numbers) {
     this.inputs = this.generateInputs(numbers);
     this.lengthLimit = numbers.length - 1;
+    this.render(rootEl);
   }
 
   public getValues(): Numbers {
@@ -21,6 +22,10 @@ export class SerialNumbersRenderer {
     return value ? Number(value) : null;
   }
 
+  private render(rootEl: HTMLElement) {
+    rootEl.append(...this.inputs);
+  }
+
   private generateInputs(numbers: Numbers) {
     return numbers.map(this.generateInput);
   }
@@ -29,6 +34,7 @@ export class SerialNumbersRenderer {
     const inputEl = document.createElement('input');
     inputEl.type = 'tel';
     inputEl.value = typeof value === 'number' ? String(value) : '';
+    inputEl.maxLength = 1;
 
     return inputEl;
   }
