@@ -27,7 +27,7 @@ export class SerialNumbersRenderer {
   }
 
   private generateInputs(numbers: Numbers) {
-    return numbers.map(this.generateInput);
+    return numbers.map(number => this.generateInput(number));
   }
 
   private generateInput(value: Numbers[number]) {
@@ -35,7 +35,30 @@ export class SerialNumbersRenderer {
     inputEl.type = 'tel';
     inputEl.value = typeof value === 'number' ? String(value) : '';
     inputEl.maxLength = 1;
+    this.bindInputEvent(inputEl);
 
     return inputEl;
+  }
+
+  private bindInputEvent(inputEl: HTMLInputElement) {
+    inputEl.addEventListener('focus', e => this.onFocusInput(e));
+    inputEl.addEventListener('keyup', e => this.onKeyupInput(e));
+  }
+
+  private onFocusInput(e: Event) {
+    const inputEl = e.currentTarget as HTMLInputElement;
+    inputEl.value = '';
+  }
+
+  private onKeyupInput(e: Event) {
+    e.preventDefault();
+    const inputEl = e.currentTarget as HTMLInputElement;
+    const {value} = inputEl;
+    if (Number.isNaN(Number(value))) {
+      alert('숫자만 입력해주세요.');
+      return;
+    }
+
+    console.log(value);
   }
 }
