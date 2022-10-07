@@ -47,6 +47,9 @@ export class SerialNumbersRenderer {
   private bindInputEvent(inputEl: HTMLInputElement, index: number) {
     inputEl.addEventListener('focus', e => this.onFocusInput(e));
     inputEl.addEventListener('keyup', e => this.onKeyupInput(e, index));
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Backspace') this.onBackspaceEvent(e, index);
+    });
   }
 
   private onFocusInput(e: Event) {
@@ -54,10 +57,11 @@ export class SerialNumbersRenderer {
     inputEl.value = '';
   }
 
-  private onKeyupInput(e: Event, index: number) {
+  private onKeyupInput(e: KeyboardEvent, index: number) {
     e.preventDefault();
     const inputEl = e.currentTarget as HTMLInputElement;
     const {value} = inputEl;
+
     if (Number.isNaN(Number(value))) {
       inputEl.value = '';
       return;
@@ -67,10 +71,16 @@ export class SerialNumbersRenderer {
       return;
     }
 
-    if (this.lengthLimit >= index + 1) this.inputFocus(index + 1);
+    if (this.lengthLimit >= index + 1) this.inputFocusByIndex(index + 1);
   }
 
-  private inputFocus(index: number) {
+  private onBackspaceEvent(e: KeyboardEvent, index: number) {
+    const inputEl = e.currentTarget as HTMLInputElement;
+    const {value} = inputEl;
+    if (!value) this.inputFocusByIndex(index - 1);
+  }
+
+  private inputFocusByIndex(index: number) {
     const input = this.inputs[index];
     if (input) input.focus();
   }
