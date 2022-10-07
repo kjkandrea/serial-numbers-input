@@ -59,7 +59,11 @@ export class SerialNumbersRenderer {
     const inputEl = e.currentTarget as HTMLInputElement;
     const {value} = inputEl;
     if (Number.isNaN(Number(value))) {
-      alert('숫자만 입력해주세요.');
+      inputEl.value = '';
+      return;
+    }
+
+    if (!inputEl.value) {
       return;
     }
 
