@@ -8,6 +8,7 @@ export class SerialNumbersRenderer {
     this.inputs = this.generateInputs(numbers);
     this.lengthLimit = numbers.length - 1;
     this.render(rootEl);
+    this.bindInputEvents();
   }
 
   public getValues(): Numbers {
@@ -35,14 +36,17 @@ export class SerialNumbersRenderer {
     inputEl.type = 'tel';
     inputEl.value = typeof value === 'number' ? String(value) : '';
     inputEl.maxLength = 1;
-    this.bindInputEvent(inputEl);
 
     return inputEl;
   }
 
-  private bindInputEvent(inputEl: HTMLInputElement) {
+  private bindInputEvents() {
+    this.inputs.forEach((input, i) => this.bindInputEvent(input, i));
+  }
+
+  private bindInputEvent(inputEl: HTMLInputElement, index: number) {
     inputEl.addEventListener('focus', e => this.onFocusInput(e));
-    inputEl.addEventListener('keyup', e => this.onKeyupInput(e));
+    inputEl.addEventListener('keyup', e => this.onKeyupInput(e, index));
   }
 
   private onFocusInput(e: Event) {
@@ -50,7 +54,7 @@ export class SerialNumbersRenderer {
     inputEl.value = '';
   }
 
-  private onKeyupInput(e: Event) {
+  private onKeyupInput(e: Event, index: number) {
     e.preventDefault();
     const inputEl = e.currentTarget as HTMLInputElement;
     const {value} = inputEl;
@@ -59,6 +63,11 @@ export class SerialNumbersRenderer {
       return;
     }
 
-    console.log(value);
+    if (this.lengthLimit >= index + 1) this.inputFocus(index + 1);
+  }
+
+  private inputFocus(index: number) {
+    const input = this.inputs[index];
+    if (input) input.focus();
   }
 }
