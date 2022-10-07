@@ -36,8 +36,8 @@ const app = {
     });
   },
   submit(numbers: Numbers) {
-    const verity = this.validation(numbers);
-    if (!verity) return;
+    const verify = this.validation(numbers);
+    if (!verify) return;
     alert(`완료. 입력된 값 : ${numbers.join(', ')}`);
   },
   validation(numbers: Numbers): boolean {
